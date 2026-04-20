@@ -1,7 +1,7 @@
 # Multi‑Task RoBERTa for Aspect‑Based Sentiment Analysis (Implicit‑Explicit)
 
-This repository reproduces the main results of our paper:  
-**Aspect F1 = 0.9311 ± 0.0075** on the SCAPT-ABSA dataset.
+This repository reproduces the **main result** of our paper:  
+**Aspect F1 = 0.9311 ± 0.0075** on the SCAPT‑augmented SemEval-2014 dataset.
 
 ## Results (5 seeds)
 
@@ -17,33 +17,31 @@ This repository reproduces the main results of our paper:
 ## How to Run
 
 1. Install dependencies: `pip install -r requirements.txt`
-2. Run `notebooks/01_preprocess.ipynb` (optional – tensors are already provided).
+2. (Optional) Run `notebooks/01_preprocess.ipynb` – the preprocessed tensors are already provided in `data/`.
 3. Run `notebooks/02_train_multitask_roberta.ipynb` to train and evaluate.
 4. Expected output: test Aspect F1 ≈ 0.93.
 
 ## Download Trained Model
 
-The trained model (475 MB) is available at https://drive.google.com/file/d/1d9xalZntUT-CB-k6EuJR6BFoqV_nOWa-/view?usp=sharing.  
+The trained model (475 MB) is available at [Google Drive link](https://drive.google.com/file/d/1d9xalZntUT-CB-k6EuJR6BFoqV_nOWa-/view?usp=sharing).  
 Place it in `models/` to skip training.
 
-### Data and Implicit Annotations
+## Data & Implicit Annotations
 
-This work uses the **SemEval-2014** restaurant and laptop datasets as the main source of aspect‑annotated sentences.  
-For **implicit aspect detection**, we augment these datasets with implicit sentiment flags from **SCAPT** [27]. SCAPT provides explicit labels indicating whether an aspect term is implicitly expressed (e.g., "The phone slipped" → aspect "grip").  
+- **SemEval-2014** restaurant and laptop datasets provide the aspect‑annotated sentences.
+- **SCAPT** supplies implicit sentiment flags (e.g., “The phone slipped” → aspect “grip”).
+- Implicit flags are **used only for evaluation** (implicit/explicit F1), not during training.
 
-These flags are **used only during evaluation** to compute implicit‑explicit F1 scores – they are **not** used during training. The training data remains the standard SemEval-2014 sentences with explicit aspect annotations.  
+The SCAPT repository is automatically cloned during preprocessing (`01_preprocess.ipynb`).
 
-Thus, the SCAPT dataset does **not** alter the training procedure; it only enables a fine‑grained analysis of model performance on implicit expressions. All claims about “closing the implicit‑explicit gap” are based on this evaluation protocol, which is fully described in the paper (Section III-A).
+## Repository Contents
 
-If you wish to reproduce the evaluation, the SCAPT repository is automatically cloned during preprocessing (`01_preprocess.ipynb`).
-
-### Repository Scope
-
-This repository focuses on **reproducing the main result** of our paper: Aspect F1 = 0.9311 ± 0.0075 using a multi‑task RoBERTa model.  
-The cross‑domain and error analysis experiments (Tables V and VIII) were performed using the same trained model; the exact scripts are not included to keep the core pipeline clean and easy to verify.  
-The numbers reported in the paper for those analyses are fully reproducible by training separate models on each domain (restaurant/laptop) and by manually inspecting misclassified implicit sentences.  
-If you need the auxiliary scripts, please contact the authors.
+- `01_preprocess.ipynb` – Creates RoBERTa tensors.
+- `02_train_multitask_roberta.ipynb` – Trains the model and reproduces the main result.
+- `03_cross_domain_evaluation.ipynb` – Evaluates the mixed‑domain model on restaurant and laptop test sets separately (in‑domain per domain).  
+  *Note: The cross‑domain transfer results (Table V) were obtained by training separate models; the code for that is not included.*
+- Error analysis (Table VIII) was performed manually; the candidate identification script is available upon request.
 
 ## Citation
 
-If you use this code, please cite our paper.
+If you use this code, please cite our paper (CONIT 2026).
